@@ -1,0 +1,6 @@
+{
+  "name": "ABDI Islamicity 4B Kaffah Cloud",
+  "description": "Platform Ekosistem Cerdas Berdaya Dakwah Islamicity 4B Kaffah: Berdakwah, Bersyariah, Berjamaah, Bermuamalah berbasis AI & Cloud Data Governance.",
+  "requestFramePermissions": ["geolocation", "camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

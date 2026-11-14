@@ -1,0 +1,447 @@
+import { DhikrItem } from "../types";
+
+export const RECOMMENDED_DHIKR_LIST: DhikrItem[] = [
+  {
+    id: "dhikr-01",
+    title: "Ayat Kursi (Surat Al-Baqarah: 255)",
+    subtitle: "Benteng Agung Perlindungan dari Gangguan Jin & Setan",
+    arabic: "اللَّهُ لَا إِلَهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ لَهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ مَنْ ذَا الَّذِي يَشْفَعُ عِنْدَهُ إِلَّا بِإِذْنِهِ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ وَلَا يُحِيطُونَ بِشَيْءٍ مِنْ عِلْمِهِ إِلَّا بِمَا شَاءَ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ وَلَا يَئُودُهُ حِفْظُهُمَا وَهُوَ الْعَلِيُّ الْعَظِيمُ",
+    latin: "Allahu laa ilaaha illaa huwal hayyul qayyuum, laa ta'khudzuhuu sinatuw-wa laa nawm, lahuu maa fis-samaawaati wa maa fil ardh, man dzalladzii yasyfa'u 'indahuu illaa bi-idznih, ya'lamu maa bayna aydiihim wa maa khalfahum, wa laa yuhiithuuna bisyay-im-min 'ilmihii illaa bimaa syaa-a, wasi'a kursiyyuhus-samaawaati wal ardh, wa laa ya-uuduhuu hifzhuhumaa wa huwal 'aliyyul 'azhiim.",
+    translation: "Allah, tidak ada tuhan selain Dia. Yang Mahahidup, yang terus-menerus mengurus (makhluk-Nya), tidak mengantuk dan tidak tidur. Milik-Nya apa yang ada di langit dan apa yang ada di bumi. Tidak ada yang dapat memberi syafaat di sisi-Nya tanpa izin-Nya. Dia mengetahui apa yang ada di hadapan mereka dan apa yang ada di belakang mereka, dan mereka tidak mengetahui sesuatu apa pun tentang ilmu-Nya melainkan apa yang Dia kehendaki. Kursi-Nya meliputi langit dan bumi. Dan Dia tidak merasa berat memelihara keduanya, dan Dia Mahatinggi, Mahabesar.",
+    targetCount: 1,
+    timeOfDay: "both",
+    category: "Perlindungan & Keselamatan",
+    fadhilah: "Barangsiapa yang membacanya ketika pagi, maka ia akan dilindungi dari setan hingga petang. Dan barangsiapa yang membacanya ketika petang, maka ia dilindungi dari setan hingga pagi hari.",
+    source: "HR. Al-Hakim (1/562), At-Thabrani. Dinilai Shahih oleh Al-Albani dalam Shahih At-Targhib No. 655.",
+    sanadGrade: "Shahih",
+    orderNumber: 1,
+    benefits: [
+      "Perlindungan total dari marabahaya syaitan dan jin",
+      "Ketenangan batin dan penjagaan malaikat",
+      "Termasuk ayat teragung di dalam Al-Qur'anul Karim"
+    ],
+    tags: ["Ayat Kursi", "Perlindungan", "Ruqyah Mandiri", "Sunnah Pagi Petang"],
+    audioUrl: "https://cdn.islamic.network/quran/audio/128/ar.alafasy/262.mp3",
+    pronunciationGuide: "Perhatikan makhraj 'ain (ع) pada 'Al-Aliyy', waqaf pada tanda waqaf lazim, serta panjang mad jaiz dan wajib 4-5 harakat pada lafal 'Laa ilaha illaa huw'."
+  },
+  {
+    id: "dhikr-02",
+    title: "Surat Al-Ikhlas, Al-Falaq & An-Naas",
+    subtitle: "Tiga Surat Pelindung (Al-Mu'awwidzatain) dari Sihir & Hasad",
+    arabic: "قُلْ هُوَ اللَّهُ أَحَدٌ ... قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ ... قُلْ أَعُوذُ بِرَبِّ النَّاسِ ...",
+    latin: "Qul huwallahu ahad... Qul a'uudzu birabbil falaq... Qul a'uudzu birabbin-naas...",
+    translation: "Katakanlah (Muhammad), 'Dialah Allah, Yang Maha Esa...' Katakanlah, 'Aku berlindung kepada Tuhan yang menguasai subuh (fajar)...' Katakanlah, 'Aku berlindung kepada Tuhannya manusia...'",
+    targetCount: 3,
+    timeOfDay: "both",
+    category: "Perlindungan & Keselamatan",
+    fadhilah: "Rasulullah SAW bersabda: 'Bacalah Qul Huwallahu Ahad dan Al-Mu'awwidzatain (Al-Falaq dan An-Naas) pada waktu petang dan pagi hari sebanyak tiga kali, niscaya itu akan mencukupimu dari segala keburukan dan marabahaya.'",
+    source: "HR. Abu Dawud No. 5082, At-Tirmidzi No. 3575. Hadits Hasan Shahih.",
+    sanadGrade: "Hasan Shahih",
+    orderNumber: 2,
+    benefits: [
+      "Mencukupi dari segala mara bahaya, sihir, 'ain, dan hasad",
+      "Meneguhkan kemurnian tauhid uluhiyah dan rububiyah",
+      "Sunnah yang dibaca 3 kali berturut-turut di awal hari dan penutup sore"
+    ],
+    tags: ["Mu'awwidzatain", "Al-Ikhlas", "Anti-Hasad", "Anti-'Ain"],
+    audioUrl: "https://cdn.islamic.network/quran/audio/128/ar.alafasy/6221.mp3",
+    pronunciationGuide: "Jaga qolqolah kubra pada huruf Dal (د) di akhir 'Ahad', serta makhraj Qof (ق) dan huruf Sin (س) pada An-Naas."
+  },
+  {
+    id: "dhikr-03",
+    title: "Sayyidul Istighfar (Puncak Pengakuan & Taubat)",
+    subtitle: "Jaminan Masuk Surga bagi yang Mengucapkannya dengan Penuh Yakin",
+    arabic: "اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ لَكَ بِذَنْبِي فَاغْفِرْ لِي، فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ",
+    latin: "Allahumma anta rabbii laa ilaaha illaa anta, khalaqtanii wa anaa 'abduka, wa anaa 'alaa 'ahdika wa wa'dika mastatha'tu, a'uudzu bika min syarri maa shana'tu, abuu-u laka bini'matika 'alayya, wa abuu-u laka bidzanbii faghfir lii, fa-innahuu laa yaghfirudz-dzunuuba illaa anta.",
+    translation: "Ya Allah, Engkau adalah Tuhanku, tidak ada tuhan selain Engkau. Engkaulah yang menciptakanku dan aku adalah hamba-Mu. Aku akan setia pada janji-Mu semampuku. Aku berlindung kepada-Mu dari keburukan yang telah kuperbuat. Aku mengakui nikmat-Mu kepadaku dan aku mengakui dosaku kepada-Mu, maka ampunilah aku. Karena sesungguhnya tidak ada yang dapat mengampuni dosa-dosa selain Engkau.",
+    targetCount: 1,
+    timeOfDay: "both",
+    category: "Tauhid & Pengakuan Dosa",
+    fadhilah: "Barangsiapa mengucapkannya di waktu siang dengan penuh keyakinan, lalu ia meninggal pada hari itu sebelum sore, maka ia termasuk penghuni surga. Dan barangsiapa membacanya di malam hari dengan yakin lalu meninggal sebelum subuh, maka ia termasuk penghuni surga.",
+    source: "HR. Al-Bukhari No. 6306 dari Syaddad bin Aus RA.",
+    sanadGrade: "Shahih Bukhari",
+    orderNumber: 3,
+    benefits: [
+      "Penghapus dosa-dosa besar dengan taubat nasuha",
+      "Kunci surga jika wafat sebelum pergantian waktu siang/malam",
+      "Kombinasi pujian tauhid, rasa syukur, dan kerendahan hati seorang hamba"
+    ],
+    tags: ["Sayyidul Istighfar", "Taubat", "Pemberantas Dosa", "Jaminan Surga"],
+    pronunciationGuide: "Lafalkan hamzah qath'i dan ha' (ه) dengan jelas. Tekankan kerendahan taubat pada 'abu'u laka bini'matika' dengan tempo tenang dan waqaf seimbang."
+  },
+  {
+    id: "dhikr-04",
+    title: "Dzikir Memasuki Waktu Pagi (Ashbahna wa Ashbahal Mulku)",
+    subtitle: "Pernyataan Kedaulatan Milik Allah & Memohon Kebaikan Hari",
+    arabic: "أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ. رَبِّ أَسْأَلُكَ خَيْرَ مَا فِي هَذَا الْيَوْمِ وَخَيْرَ مَا بَعْدَهُ، وَأَعُوذُ بِكَ مِنْ شَرِّ مَا فِي هَذَا الْيَوْمِ وَشَرِّ مَا بَعْدَهُ، رَبِّ أَعُوذُ بِكَ مِنَ الْكَسَلِ وَسُوءِ الْكِبَرِ، رَبِّ أَعُوذُ بِكَ مِنْ عَذَابٍ فِي النَّارِ وَعَذَابٍ فِي الْقَبْرِ",
+    latin: "Ashbahnaa wa ashbahal mulku lillaahi walhamdu lillaah, laa ilaaha illallaahu wahdahuu laa syariika lah, lahul mulku wa lahul hamdu wa huwa 'alaa kulli syay-in qadiir. Rabbi as-aluka khayra maa fii haadzal yawmi wa khayra maa ba'dahu, wa a'uudzu bika min syarri maa fii haadzal yawmi wa syarri maa ba'dah, rabbi a'uudzu bika minal kasali wa suu-il kibar, rabbi a'uudzu bika min 'adzaabin fin-naari wa 'adzaabin fil qabr.",
+    translation: "Kami telah memasuki waktu pagi dan kerajaan hanya milik Allah, segala puji bagi Allah. Tidak ada tuhan selain Allah Yang Maha Esa, tiada sekutu bagi-Nya. Bagi-Nya kerajaan dan bagi-Nya segala pujian, dan Dia Mahakuasa atas segala sesuatu. Wahai Tuhanku, aku memohon kepada-Mu kebaikan hari ini dan kebaikan setelahnya, dan aku berlindung kepada-Mu dari keburukan hari ini dan keburukan sesudahnya. Wahai Tuhanku, aku berlindung kepada-Mu dari rasa malas dan keburukan di masa tua. Wahai Tuhanku, aku berlindung kepada-Mu dari siksa neraka dan siksa kubur.",
+    targetCount: 1,
+    timeOfDay: "morning",
+    category: "Kesyukuran & Pagi/Sore",
+    fadhilah: "Doa agung penyerahan jiwa di awal fajar untuk mendapatkan barakah aktivitas harian, keselamatan kerja, serta pelindung dari rasa malas dan siksa kubur.",
+    source: "HR. Muslim No. 2723 dari Abdullah bin Mas'ud RA.",
+    sanadGrade: "Shahih Muslim",
+    orderNumber: 4,
+    benefits: [
+      "Mengusir rasa malas (al-kasal) dan memantik semangat produktivitas",
+      "Memperoleh kebaikan yang ada sepanjang hari dan sesudahnya",
+      "Perlindungan dari keburukan takdir dan kepikunan di masa tua"
+    ],
+    tags: ["Dzikir Pagi", "Anti-Malas", "Kebaikan Hari", "Pagi Berkah"],
+    pronunciationGuide: "Perhatikan shifat shafir pada Shod (ص) 'Ashbahnaa', bedakan Kha (خ) 'Khayra' dari Ha (ح), serta izh-har syafawi pada mim sukun."
+  },
+  {
+    id: "dhikr-05",
+    title: "Dzikir Memasuki Waktu Petang (Amsayna wa Amsal Mulku)",
+    subtitle: "Pernyataan Kerajaan Milik Allah & Perlindungan Sepanjang Malam",
+    arabic: "أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ. رَبِّ أَسْأَلُكَ خَيْرَ مَا فِي هَذِهِ اللَّيْلَةِ وَخَيْرَ مَا بَعْدَهَا، وَأَعُوذُ بِكَ مِنْ شَرِّ مَا فِي هَذِهِ اللَّيْلَةِ وَشَرِّ مَا بَعْدَهَا، رَبِّ أَعُوذُ بِكَ مِنَ الْكَسَلِ وَسُوءِ الْكِبَرِ، رَبِّ أَعُوذُ بِكَ مِنْ عَذَابٍ فِي النَّارِ وَعَذَابٍ فِي الْقَبْرِ",
+    latin: "Amsaynaa wa amsal mulku lillaahi walhamdu lillaah, laa ilaaha illallaahu wahdahuu laa syariika lah, lahul mulku wa lahul hamdu wa huwa 'alaa kulli syay-in qadiir. Rabbi as-aluka khayra maa fii haadzihil laylati wa khayra maa ba'dahaa, wa a'uudzu bika min syarri maa fii haadzihil laylati wa syarri maa ba'dahaa, rabbi a'uudzu bika minal kasali wa suu-il kibar, rabbi a'uudzu bika min 'adzaabin fin-naari wa 'adzaabin fil qabr.",
+    translation: "Kami telah memasuki waktu petang dan kerajaan hanya milik Allah, segala puji bagi Allah. Tidak ada tuhan selain Allah Yang Maha Esa, tiada sekutu bagi-Nya. Bagi-Nya kerajaan dan pujian, dan Dia Mahakuasa atas segala sesuatu. Wahai Tuhanku, aku memohon kepada-Mu kebaikan malam ini dan kebaikan setelahnya, dan aku berlindung kepada-Mu dari keburukan malam ini dan keburukan sesudahnya. Wahai Tuhanku, aku berlindung kepada-Mu dari rasa malas dan keburukan masa tua, serta siksa neraka dan siksa kubur.",
+    targetCount: 1,
+    timeOfDay: "evening",
+    category: "Kesyukuran & Pagi/Sore",
+    fadhilah: "Doa penyucian diri saat matahari terbenam untuk menyambut malam penuh damai dan perlindungan malaikat saat istirahat tidur.",
+    source: "HR. Muslim No. 2723 dari Ibnu Mas'ud RA.",
+    sanadGrade: "Shahih Muslim",
+    orderNumber: 5,
+    benefits: [
+      "Kebaikan dan ketentraman istirahat malam",
+      "Penjagaan dari mimpi buruk dan gangguan kejahatan malam",
+      "Penutup hari yang penuh dengan pujian tauhid"
+    ],
+    tags: ["Dzikir Petang", "Penjagaan Malam", "Kebaikan Malam"],
+    pronunciationGuide: "Lafalkan mad thobi'i pada 'Amsaynaa' dengan lembut 2 harakat, dan jaga ghunnah tasydid pada 'Fin-naari' secara sempurna."
+  },
+  {
+    id: "dhikr-06",
+    title: "Doa Keridhaan Iman (Radhitu billahi Rabba)",
+    subtitle: "Rela Allah Sebagai Rabb, Islam Agamaku, Muhammad Nabiku",
+    arabic: "رَضِيتُ بِاللَّهِ رَبًّا، وَبِالْإِسْلَامِ دِينًا، وَبِمُحَمَّدٍ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ نَبِيًّا",
+    latin: "Radhiitu billaahi rabbaa, wa bil-islaami diinaa, wa bi-muhammadin shallallaahu 'alayhi wa sallama nabiyyaa.",
+    translation: "Aku rela Allah sebagai Tuhanku, Islam sebagai agamaku, dan Muhammad shallallahu 'alaihi wa sallam sebagai nabiku.",
+    targetCount: 3,
+    timeOfDay: "both",
+    category: "Tauhid & Pengakuan Dosa",
+    fadhilah: "Rasulullah SAW bersabda: 'Barangsiapa mengucapkannya tiga kali ketika pagi dan petang, maka adalah hak bagi Allah untuk meridhai hamba-Nya itu pada hari kiamat.'",
+    source: "HR. Abu Dawud No. 5072, At-Tirmidzi No. 3389, Ahmad (4/337). Shahih lighairihi.",
+    sanadGrade: "Hasan Shahih",
+    orderNumber: 6,
+    benefits: [
+      "Memperoleh keridhaan Allah Yang Maha Pemurah di Yaumil Mahsyar",
+      "Merasakan manisnya iman (halawatul iman) di dalam dada",
+      "Ketetapan hati dalam memegang syariat Islam sampai akhir hayat"
+    ],
+    tags: ["Keridhaan", "Manisnya Iman", "Tauhid", "Sunnah Pagi Petang"],
+    pronunciationGuide: "Tahan huruf Dho (ض) pada 'Radhiitu' dengan sifat istithalah yang lembut, serta tasydid Ya' pada 'Nabiyyaa'."
+  },
+  {
+    id: "dhikr-07",
+    title: "Benteng dari Segala Marabahaya & Racun (Bismillahilladzi)",
+    subtitle: "Tak Ada Bahaya yang Mendekat di Bumi Maupun di Langit",
+    arabic: "بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ",
+    latin: "Bismillaahilladzii laa yadhurru ma'asmihii syay-un fil ardhi wa laa fis-samaa-i wa huwas-samii'ul 'aliim.",
+    translation: "Dengan nama Allah yang bersama nama-Nya tidak ada sesuatu pun di bumi maupun di langit yang dapat membahayakan, dan Dia Maha Mendengar lagi Maha Mengetahui.",
+    targetCount: 3,
+    timeOfDay: "both",
+    category: "Perlindungan & Keselamatan",
+    fadhilah: "Rasulullah SAW bersabda: 'Barangsiapa mengucapkannya tiga kali di waktu pagi dan petang, maka tidak akan ada sesuatu pun yang dapat membahayakannya (termasuk racun, bisa, kecelakaan, dan marabahaya mendadak).'",
+    source: "HR. Abu Dawud No. 5088, At-Tirmidzi No. 3388, Ibnu Majah No. 3869. Hadits Shahih.",
+    sanadGrade: "Shahih",
+    orderNumber: 7,
+    benefits: [
+      "Tameng dari penyakit menular, sengatan binatang, dan racun berbahaya",
+      "Perlindungan dari bencana mendadak (bala' fuj'ah)",
+      "Ketenangan saat bepergian atau beraktivitas di luar rumah"
+    ],
+    tags: ["Anti-Bencana", "Keselamatan", "Perlindungan Diri", "Bismillah"]
+  },
+  {
+    id: "dhikr-08",
+    title: "Doa Afiyah Fisik, Pendengaran & Penglihatan",
+    subtitle: "Memohon Keselamatan Raga, Dijauhkan dari Kekufuran & Kemiskinan",
+    arabic: "اللَّهُمَّ عَافِنِي فِي بَدَنِي، اللَّهُمَّ عَافِنِي فِي سَمْعِي، اللَّهُمَّ عَافِنِي فِي بَصَرِي، لَا إِلَهَ إِلَّا أَنْتَ. اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْكُفْرِ وَالْفَقْرِ، وَأَعُوذُ بِكَ مِنْ عَذَابِ الْقَبْرِ، لَا إِلَهَ إِلَّا أَنْتَ",
+    latin: "Allahumma 'aafinii fii badanii, Allahumma 'aafinii fii sam'ii, Allahumma 'aafinii fii basharii, laa ilaaha illaa anta. Allahumma innii a'uudzu bika minal kufri wal faqr, wa a'uudzu bika min 'adzaabil qabr, laa ilaaha illaa anta.",
+    translation: "Ya Allah, selamatkanlah (afiatkanlah) tubuhku. Ya Allah, selamatkanlah pendengaranku. Ya Allah, selamatkanlah penglihatanku, tiada tuhan selain Engkau. Ya Allah, aku berlindung kepada-Mu dari kekafiran dan kemiskinan, dan aku berlindung kepada-Mu dari siksa kubur, tiada tuhan selain Engkau.",
+    targetCount: 3,
+    timeOfDay: "both",
+    category: "Kesehatan & 'Afiyah",
+    fadhilah: "Rasulullah SAW senantiasa membaca doa ini 3 kali di waktu pagi dan petang untuk merawat kesucian panca indera agar selalu taat kepada Allah dan terjaga dari himpitan hidup yang memicu keputusasaan.",
+    source: "HR. Abu Dawud No. 5090, Ahmad (5/42), An-Nasa'i dalam 'Amalul Yaum wal Lailah No. 22. Hadits Hasan.",
+    sanadGrade: "Hasan",
+    orderNumber: 8,
+    benefits: [
+      "Menjaga fungsi panca indera (mata, telinga, tubuh) tetap sehat dan prima",
+      "Perlindungan dari kefakiran harta yang merusak keteguhan iman",
+      "Perlindungan harian dari himpitan siksa alam barzakh (kubur)"
+    ],
+    tags: ["Kesehatan", "'Afiyah", "Anti-Faqir", "Pelindung Indra"]
+  },
+  {
+    id: "dhikr-09",
+    title: "Doa Perlindungan dari Sengatan Makhluk Jahat",
+    subtitle: "Berlindung dengan Kalimat-Kalimat Allah yang Sempurna",
+    arabic: "أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ",
+    latin: "A'uudzu bikalimaatillaahit-taammaati min syarri maa khalaq.",
+    translation: "Aku berlindung dengan kalimat-kalimat Allah yang sempurna dari kejahatan makhluk yang Dia ciptakan.",
+    targetCount: 3,
+    timeOfDay: "evening",
+    category: "Perlindungan & Keselamatan",
+    fadhilah: "Barangsiapa mengucapkannya di waktu petang sebanyak 3 kali, niscaya tidak akan ada sengatan binatang berbisa (seperti kalajengking dan ular) yang membahayakannya pada malam itu.",
+    source: "HR. Muslim No. 2709 dari Abu Hurairah RA, At-Tirmidzi No. 3604.",
+    sanadGrade: "Shahih Muslim",
+    orderNumber: 9,
+    benefits: [
+      "Perlindungan khusus saat malam hari dari serangan binatang berbisa",
+      "Menangkal gangguan makhluk ghaib dan energi negatif saat malam",
+      "Sunnah khusus saat memasuki waktu senja (maghrib)"
+    ],
+    tags: ["Dzikir Petang Khusus", "Perlindungan Sengatan", "Kalimat Sempurna"]
+  },
+  {
+    id: "dhikr-10",
+    title: "Tasbih Pembersih Dosa: Subhanallahi wa Bihamdihi 100x",
+    subtitle: "Dihapuskan Dosa Walaupun Sebanyak Buih di Lautan Luas",
+    arabic: "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ",
+    latin: "Subhaanallaahi wa bihamdih.",
+    translation: "Maha Suci Allah dan segala puji bagi-Nya.",
+    targetCount: 100,
+    timeOfDay: "both",
+    category: "Tasbih & Istighfar",
+    fadhilah: "Rasulullah SAW bersabda: 'Barangsiapa yang mengucapkan Subhanallahi wa bihamdihi 100 kali dalam sehari, maka akan diampuni dosa-dosanya meskipun sebanyak buih di lautan luas, dan tidak ada seorang pun pada hari kiamat yang datang membawa amalan lebih baik darinya kecuali yang membaca semisalnya atau lebih banyak.'",
+    source: "HR. Al-Bukhari No. 6405, Muslim No. 2691 dari Abu Hurairah RA.",
+    sanadGrade: "Shahih Muttafaqun 'Alaih",
+    orderNumber: 10,
+    benefits: [
+      "Pembersihan timbunan dosa khilaf harian secara menyeluruh",
+      "Pahala timbangan amal terberat yang sangat dicintai Ar-Rahman",
+      "Sangat ringan di lisan namun luar biasa berbobot di mizan hari hisab"
+    ],
+    tags: ["Tasbih 100x", "Pelebur Dosa", "Pahala Samudera", "Dicintai Allah"],
+    pronunciationGuide: "Lafalkan Sin (س) lembut tanpa desis berlebihan, bedakan huruf Ha' (ح) bersih pada 'wa bihamdih', dengan ketukan irama tasbih yang konstan."
+  },
+  {
+    id: "dhikr-11",
+    title: "Tahlil Sempurna: La Ilaha Illallah Wahdahu La Syarika Lah",
+    subtitle: "Pahala Memerdekakan 10 Budak & Benteng dari Syaitan",
+    arabic: "لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ",
+    latin: "Laa ilaaha illallaahu wahdahuu laa syariika lah, lahul mulku wa lahul hamdu wa huwa 'alaa kulli syay-in qadiir.",
+    translation: "Tidak ada tuhan selain Allah Yang Maha Esa, tiada sekutu bagi-Nya. Bagi-Nya kerajaan dan segala puji, dan Dia Mahakuasa atas segala sesuatu.",
+    targetCount: 10,
+    timeOfDay: "both",
+    category: "Tauhid & Pengakuan Dosa",
+    fadhilah: "Barangsiapa membacanya 10 kali saat pagi, dicatat baginya 100 kebaikan, dihapus 100 keburukan, setara memerdekakan budak dari keturunan Nabi Ismail AS, dan menjadi benteng baginya dari godaan setan.",
+    source: "HR. Al-Bukhari No. 3293, Muslim No. 2691, Abu Dawud No. 5077.",
+    sanadGrade: "Shahih",
+    orderNumber: 11,
+    benefits: [
+      "Setara pahala membebaskan budak mukmin berbobot mulia",
+      "Membangun dinding perisai kokoh yang tak mampu ditembus bisikan setan",
+      "Memperbaharui dan menguatkan ikrar kalimat tauhid setiap hari"
+    ],
+    tags: ["Tahlil", "Tauhid", "Perisai Syaitan", "10x / 100x"],
+    pronunciationGuide: "Panjangkan 'Laa' 2 harakat, perjelas dhommah pada 'wahdahuu', dan bedakan 'Ain (ع) pada ''alaa kulli syay-in qadiir' serta tebalkan Qof (ق)."
+  },
+  {
+    id: "dhikr-12",
+    title: "Doa Memohon Perlindungan Total di Segala Arah",
+    subtitle: "Penjagaan Jiwa, Agama, Dunia, Keluarga, dan Harta Benda",
+    arabic: "اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي الدُّنْيَا وَالْآخِرَةِ، اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي دِينِي وَدُنْيَايَ وَأَهْلِي وَمَالِي، اللَّهُمَّ اسْتُرْ عَوْرَاتِي وَآمِنْ رَوْعَاتِي، اللَّهُمَّ احْفَظْنِي مِنْ بَيْنِ يَدَيَّ، وَمِنْ خَلْفِي، وَعَنْ يَمِينِي، وَعَنْ شِمَالِي، وَمِنْ فَوْقِي، وَأَعُوذُ بِعَظَمَتِكَ أَنْ أُغْتَالَ مِنْ تَحْتِي",
+    latin: "Allahumma innii as-alukal 'afwa wal 'aafiyah fid-dunyaa wal aakhirah. Allahumma innii as-alukal 'afwa wal 'aafiyah fii diinii wa dunyaaya wa ahlii wa maalii. Allahummastur 'awraatii wa aamin raw'aatii. Allahummahfazhnii mim bayni yadayya, wa min khalfii, wa 'an yamiinii, wa 'an syimaalii, wa min fawqii, wa a'uudzu bi'azhamatika an ughtaala min tahtii.",
+    translation: "Ya Allah, sesungguhnya aku memohon ampunan dan keselamatan ('afiyah) di dunia dan akhirat. Ya Allah, aku memohon ampunan dan keselamatan dalam urusan agamaku, duniaku, keluargaku, dan hartaku. Ya Allah, tutuplah aib-aibku dan tenteramkanlah rasa takutku. Ya Allah, jagalah aku dari arah depanku, belakangku, kananku, kiriku, dan atasku. Dan aku berlindung dengan keagungan-Mu agar tidak disergap (dibinasakan) dari arah bawahku.",
+    targetCount: 1,
+    timeOfDay: "both",
+    category: "Kesyukuran & Pagi/Sore",
+    fadhilah: "Abdullah bin Umar RA berkata: 'Rasulullah SAW tidak pernah meninggalkan doa ini ketika petang dan pagi hari.' Doa perlindungan 6 penjuru (depan, belakang, kanan, kiri, atas, bawah).",
+    source: "HR. Abu Dawud No. 5074, Ibnu Majah No. 3871, Al-Hakim (1/517). Shahih.",
+    sanadGrade: "Shahih",
+    orderNumber: 12,
+    benefits: [
+      "Perlindungan 6 arah mata angin dari segala marabahaya tak terduga",
+      "Penjagaan keselamatan keluarga tercinta dan harta dari musibah",
+      "Ketenangan batin dari kecemasan ('aamin raw'aati) dan penutup aib"
+    ],
+    tags: ["Pelindung 6 Penjuru", "Harta & Keluarga", "Doa Rutin Nabi"]
+  },
+  {
+    id: "dhikr-13",
+    title: "Dzikir Hasbiyallahu: Kecukupan Urusan yang Merisaukan",
+    subtitle: "Cukuplah Allah Bagiku, Bertawakkal kepada Pemilik 'Arsy yang Agung",
+    arabic: "حَسْبِيَ اللَّهُ لَا إِلَهَ إِلَّا هُوَ عَلَيْهِ تَوَكَّلْتُ وَهُوَ رَبُّ الْعَرْشِ الْعَظِيمِ",
+    latin: "Hasbiyallaahu laa ilaaha illaa huwa 'alayhi tawakkaltu wa huwa rabbul 'arsyil 'azhiim.",
+    translation: "Cukuplah Allah bagiku, tidak ada tuhan selain Dia. Hanya kepada-Nya aku bertawakkal, dan Dia adalah Tuhan Pemilik 'Arsy yang agung.",
+    targetCount: 7,
+    timeOfDay: "both",
+    category: "Rezeki & Kemudahan",
+    fadhilah: "Barangsiapa membacanya 7 kali di pagi dan petang hari, maka Allah akan mencukupkan untuknya apa yang membuatnya risau dan gelisah dalam urusan dunia maupun akhiratnya.",
+    source: "HR. Abu Dawud No. 5081, Ibnu As-Sunni No. 71 dari Abu Darda' RA. Hadits Mauquf Shahih.",
+    sanadGrade: "Shahih",
+    orderNumber: 13,
+    benefits: [
+      "Menghilangkan kecemasan, overthinking, dan stress persoalan hidup",
+      "Jaminan pertolongan Allah dalam menuntaskan perkara rumit",
+      "Kepasrahan tawakkal mutlak kepada Sang Penguasa Semesta"
+    ],
+    tags: ["Hasbiyallah 7x", "Tawakkal", "Anti-Gelisah", "Kecukupan Rezeki"]
+  },
+  {
+    id: "dhikr-14",
+    title: "Doa Perbaikan Seluruh Urusan (Ya Hayyu Ya Qayyum)",
+    subtitle: "Jangan Serahkan Diriku pada Diriku Sendiri Walau Sekejap Mata",
+    arabic: "يَا حَيُّ يَا قَيُّومُ بِرَحْمَتِكَ أَسْتَغِيثُ، أَصْلِحْ لِي شَأْنِي كُلَّهُ، وَلَا تَكِلْنِي إِلَى نَفْسِي طَرْفَةَ عَيْنٍ",
+    latin: "Yaa hayyu yaa qayyuumu birahmatika astaghiits, ashlih lii sya'nii kullah, wa laa takilnii ilaa nafsii tharfata 'ayn.",
+    translation: "Wahai Yang Mahahidup, Wahai Yang Terus Menerus Mengurus Makhluk-Nya, dengan rahmat-Mu aku memohon pertolongan. Perbaikilah seluruh urusanku, dan janganlah Engkau serahkan diriku kepada diriku sendiri (tanpa pertolongan-Mu) walau sekejap mata pun.",
+    targetCount: 1,
+    timeOfDay: "both",
+    category: "Rezeki & Kemudahan",
+    fadhilah: "Wasiat Rasulullah SAW kepada putrinya tercinta Sayyidah Fatimah Az-Zahra RA untuk selalu dibaca di waktu pagi dan petang hari demi kelancaran dan perbaikan seluruh aspek hidup.",
+    source: "HR. An-Nasa'i dalam As-Sunan Al-Kubra No. 10405, Al-Hakim (1/545). Shahih.",
+    sanadGrade: "Shahih",
+    orderNumber: 14,
+    benefits: [
+      "Perbaikan urusan karir, rezeki, keluarga, dan ibadah secara berkah",
+      "Melatih tawadhu dan tidak sombong dengan kekuatan diri sendiri",
+      "Mendatangkan rahmat dan taufiq Allah dalam setiap keputusan"
+    ],
+    tags: ["Ya Hayyu Ya Qayyum", "Wasiat Fatimah", "Perbaikan Urusan"]
+  },
+  {
+    id: "dhikr-15",
+    title: "Istighfar Harian & Taubat Rutin (100x)",
+    subtitle: "Meneladani Sunnah Rasulullah SAW yang Beristighfar Tiap Hari",
+    arabic: "أَسْتَغْفِرُ اللَّهَ وَأَتُوبُ إِلَيْهِ",
+    latin: "Astaghfirullaaha wa atuubu ilayh.",
+    translation: "Aku memohon ampunan kepada Allah dan bertaubat kepada-Nya.",
+    targetCount: 100,
+    timeOfDay: "both",
+    category: "Tasbih & Istighfar",
+    fadhilah: "Rasulullah SAW bersabda: 'Demi Allah, sungguh aku beristighfar dan bertaubat kepada Allah dalam sehari lebih dari 70 kali (dalam riwayat lain: 100 kali).'",
+    source: "HR. Al-Bukhari No. 6307, Muslim No. 2702 dari Al-Agharr Al-Muzani RA.",
+    sanadGrade: "Shahih Bukhari & Muslim",
+    orderNumber: 15,
+    benefits: [
+      "Melapangkan rezeki yang sempit dan mendatangkan jalan keluar (solusi)",
+      "Menghilangkan rasa gundah dan memberkahi keturunan serta harta",
+      "Menghidupkan hati yang lalai dengan pancaran nur taubat"
+    ],
+    tags: ["Istighfar 100x", "Pembuka Pintu Rezeki", "Penyejuk Jiwa"],
+    pronunciationGuide: "Tebalkan huruf Ghain (غ) dengan sifat rukhawah, perjelas huruf Ta' (ت) dan Ba' (ب) pada 'wa atuubu ilayh' dengan tempo khusyuk berulang."
+  },
+  {
+    id: "dhikr-16",
+    title: "Shalawat atas Nabi Muhammad SAW (10x Pagi & Sore)",
+    subtitle: "Raih Syafaat Rasulullah SAW di Hari Kiamat Kelak",
+    arabic: "اللَّهُمَّ صَلِّ وَسَلِّمْ عَلَى نَبِيِّنَا مُحَمَّدٍ",
+    latin: "Allahumma shalli wa sallim 'alaa nabiyyinaa Muhammad.",
+    translation: "Ya Allah, limpahkanlah shalawat dan salam kepada Nabi kami, Muhammad.",
+    targetCount: 10,
+    timeOfDay: "both",
+    category: "Tasbih & Istighfar",
+    fadhilah: "Rasulullah SAW bersabda: 'Barangsiapa bershalawat kepadaku pada waktu pagi 10 kali dan waktu petang 10 kali, niscaya ia akan memperoleh syafaatku pada hari kiamat.'",
+    source: "HR. At-Thabrani dengan dua sanad, salah satunya dinilai jayyid oleh Al-Mundziri dalam At-Targhib wat Tarhib (1/261). Dinilai Hasan oleh Al-Albani.",
+    sanadGrade: "Hasan",
+    orderNumber: 16,
+    benefits: [
+      "Hak istimewa meraih syafaat Al-Uzma dari Baginda Nabi SAW",
+      "Dilipatgandakan 10 rahmat kebaikan untuk setiap 1 shalawat",
+      "Wujud cinta sejati dan mahabbah kepada junjungan mulia"
+    ],
+    tags: ["Shalawat Nabi", "Syafaat Kiamat", "Mahabbah Rasulullah"],
+    pronunciationGuide: "Perhatikan tasydid pada Lam 'Shalli' dan Lam 'Sallim', serta dengung ghunnah pada Mim bertasydid 'Muhammad'."
+  },
+  {
+    id: "dhikr-17",
+    title: "Tasbih, Tahmid, Takbir (Dzikir Ba'da Sholat 33x)",
+    subtitle: "Fondasi Dzikir Agung Pengisi Waktu Luang & Ba'da Fardhu",
+    arabic: "سُبْحَانَ اللَّهِ (٣٣x) ، الْحَمْدُ لِلَّهِ (٣٣x) ، اللَّهُ أَكْبَرُ (٣٣x)",
+    latin: "Subhanallah (33x), Alhamdulillah (33x), Allahu Akbar (33x)",
+    translation: "Maha Suci Allah (33x), Segala puji bagi Allah (33x), Allah Maha Besar (33x). Ditutup dengan La ilaha illallahu wahdahu la syarika lah.",
+    targetCount: 33,
+    timeOfDay: "general",
+    category: "Tasbih & Istighfar",
+    fadhilah: "Barangsiapa bertasbih 33x, bertahmid 33x, bertakbir 33x lalu menggenapkannya menjadi 100 dengan tahlil, maka diampuni kesalahannya meski sebanyak buih di samudera.",
+    source: "HR. Muslim No. 597 dari Abu Hurairah RA.",
+    sanadGrade: "Shahih Muslim",
+    orderNumber: 17,
+    benefits: [
+      "Dzikir utama yang diajarkan Rasulullah SAW kepada kaum dhuafa muhajirin",
+      "Pahala yang menandingi sedekah emas kaum berada",
+      "Menenangkan saraf dan pikiran setelah menunaikan sholat fardhu"
+    ],
+    tags: ["Tasbih 33x", "Ba'da Sholat", "Dzikir Bebas"],
+    pronunciationGuide: "Jaga ketukan ritme tasbih 3 lafal: Subhanallah (33x), disusul Alhamdulillah (33x), lalu Allahu Akbar (33x) dengan jeda nafas tenang."
+  },
+  {
+    id: "dhikr-18",
+    title: "Hauqalah: Simpanan Perbendaharaan Surga",
+    subtitle: "Tiada Daya dan Upaya Melainkan dengan Pertolongan Allah",
+    arabic: "لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ الْعَلِيِّ الْعَظِيمِ",
+    latin: "Laa hawla wa laa quwwata illaa billaahil 'aliyyil 'azhiim.",
+    translation: "Tiada daya (untuk menjauhi maksiat) dan tiada kekuatan (untuk menjalankan ketaatan) melainkan dengan pertolongan Allah Yang Mahatinggi lagi Mahaagung.",
+    targetCount: 33,
+    timeOfDay: "general",
+    category: "Rezeki & Kemudahan",
+    fadhilah: "Rasulullah SAW bersabda kepada Abu Musa Al-Asy'ari: 'Maukah aku tunjukkan kepadamu salah satu perbendaharaan surga? Ucapkanlah: La hawla wa la quwwata illa billah.'",
+    source: "HR. Al-Bukhari No. 6384, Muslim No. 2704.",
+    sanadGrade: "Shahih Muttafaqun 'Alaih",
+    orderNumber: 18,
+    benefits: [
+      "Harta simpanan di dalam istana surga (kanzun min kunuzil jannah)",
+      "Obat penawar dari 99 penyakit kejiwaan dan kegelisahan",
+      "Penegas ketidakberdayaan makhluk di hadapan kebesaran Al-Khaliq"
+    ],
+    tags: ["Hauqalah", "Simpanan Surga", "Obat Gundah", "Tawakkal"],
+    pronunciationGuide: "Tebalkan Qof (ق) pada 'Quwwata', jaga mad thobi'i 'Laa hawla', dan sebutkan 'Aliyyil 'Azhiim' dengan ketukan tajweed murni."
+  },
+];
+
+export const FREE_TASBIH_OPTIONS = [
+  {
+    label: "Subhanallah",
+    arabic: "سُبْحَانَ اللَّهِ",
+    meaning: "Maha Suci Allah",
+    defaultTarget: 33,
+  },
+  {
+    label: "Alhamdulillah",
+    arabic: "الْحَمْدُ لِلَّهِ",
+    meaning: "Segala Puji Bagi Allah",
+    defaultTarget: 33,
+  },
+  {
+    label: "Allahu Akbar",
+    arabic: "اللَّهُ أَكْبَرُ",
+    meaning: "Allah Maha Besar",
+    defaultTarget: 33,
+  },
+  {
+    label: "Astaghfirullah",
+    arabic: "أَسْتَغْفِرُ اللَّهَ",
+    meaning: "Aku Memohon Ampun Kepada Allah",
+    defaultTarget: 100,
+  },
+  {
+    label: "La Ilaha Illallah",
+    arabic: "لَا إِلَهَ إِلَّا اللَّهُ",
+    meaning: "Tiada Tuhan Selain Allah",
+    defaultTarget: 100,
+  },
+  {
+    label: "Shalawat Nabi",
+    arabic: "اللَّهُمَّ صَلِّ عَلَى سَيِّدِنَا مُحَمَّدٍ",
+    meaning: "Limpahkanlah Shalawat kepada Junjungan Kami Muhammad",
+    defaultTarget: 100,
+  },
+  {
+    label: "Subhanallahi wa Bihamdihi",
+    arabic: "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ",
+    meaning: "Maha Suci Allah dan Segala Puji Bagi-Nya",
+    defaultTarget: 100,
+  },
+  {
+    label: "La Hawla wa La Quwwata Illa Billah",
+    arabic: "لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ",
+    meaning: "Tiada Daya dan Kekuatan Kecuali dengan Pertolongan Allah",
+    defaultTarget: 33,
+  }
+];
