@@ -14,6 +14,7 @@ import {
   formatReceiptTimestamp,
   generateReceiptQrDataUrl,
 } from "../utils/donationReceiptPdf";
+import { useToast } from "../contexts/ToastContext";
 
 interface DonationReceiptModalProps {
   receipt: DonationReceiptData | null;
@@ -24,6 +25,7 @@ export default function DonationReceiptModal({
   receipt,
   onClose,
 }: DonationReceiptModalProps) {
+  const { showToast } = useToast();
   const [verifyQrUrl, setVerifyQrUrl] = useState<string>("");
   const [isDownloadingPdf, setIsDownloadingPdf] = useState<boolean>(false);
   const [pdfSuccess, setPdfSuccess] = useState<boolean>(false);
@@ -61,6 +63,12 @@ export default function DonationReceiptModal({
     try {
       await downloadDonationReceiptPdf(receipt);
       setPdfSuccess(true);
+      showToast({
+        type: "success",
+        badge: "KWITANSI PDF",
+        title: "Kwitansi Resmi PDF Diunduh",
+        message: `File PDF untuk transaksi ${receipt.receiptNumber} berhasil diunduh.`,
+      });
       setTimeout(() => setPdfSuccess(false), 2500);
     } finally {
       setIsDownloadingPdf(false);

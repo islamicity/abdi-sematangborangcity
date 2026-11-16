@@ -31,8 +31,15 @@ import {
   Network,
   Trophy,
   History,
+  Receipt,
 } from "lucide-react";
-import { KelurahanData, CommunityEvent, UserProfileOnboarding } from "../types";
+import {
+  BerjamaahDonationHistoryEntry,
+  CommunityEvent,
+  KelurahanData,
+  SadaqahProject,
+  UserProfileOnboarding,
+} from "../types";
 import { KELURAHAN_GIS_DATA, COMMUNITY_EVENTS } from "../data/mockData";
 import CommunityIntelligenceSocialMapping from "./CommunityIntelligenceSocialMapping";
 import TalentSkillRegistry from "./TalentSkillRegistry";
@@ -42,7 +49,7 @@ import CommunityImpactDashboard from "./CommunityImpactDashboard";
 import ServiceJourneyTimeline from "./ServiceJourneyTimeline";
 import OnboardingWizard from "./OnboardingWizard";
 import SkillSyncOverlay from "./SkillSyncOverlay";
-import SadaqahImpactTracker from "./SadaqahImpactTracker";
+import SadaqahImpactTracker, { SadaqahDonationMeta } from "./SadaqahImpactTracker";
 import VolunteerHighlightSpotlight from "./VolunteerHighlightSpotlight";
 import InteractiveCommunityPolls from "./InteractiveCommunityPolls";
 import CommunitySkillMap from "./CommunitySkillMap";
@@ -50,7 +57,61 @@ import DigitalMosqueHonors from "./DigitalMosqueHonors";
 import ContributorLeaderboard from "./ContributorLeaderboard";
 import ContributionTimelineModal from "./ContributionTimelineModal";
 import MosqueQrAttendanceModal from "./MosqueQrAttendanceModal";
-import MosqueDonationQrGenerator from "./MosqueDonationQrGenerator";
+import MosqueDonationQrGenerator, {
+  DonationRecord,
+  INITIAL_TRANSPARENT_LEDGER,
+} from "./MosqueDonationQrGenerator";
+import BerjamaahDonationHistoryTable from "./BerjamaahDonationHistoryTable";
+import { useToast } from "../contexts/ToastContext";
+
+const BERJAMAAH_DONATION_HISTORY_KEY = "abdi_berjamaah_donation_history_v1";
+
+const INITIAL_BERJAMAAH_DONATION_HISTORY: BerjamaahDonationHistoryEntry[] = [
+  ...INITIAL_TRANSPARENT_LEDGER.map((rec) => ({
+    id: rec.id,
+    referenceId: rec.transactionRef,
+    date: rec.timestamp,
+    amount: rec.amount,
+    donorName: rec.donorName,
+    isAnonymous: rec.isAnonymous,
+    sourceType: "QR_INFAQ_MASJID" as const,
+    recipientMasjidOrProject: rec.mosqueName,
+    mosqueId: rec.mosqueId,
+    purposeOrCategory: rec.purpose,
+    paymentChannel: rec.channel,
+    status: "TERVERIFIKASI" as const,
+  })),
+  {
+    id: "sdq-seed-01",
+    referenceId: "SDQ-2026-441802",
+    date: new Date(Date.now() - 1000 * 60 * 60 * 5).toISOString(),
+    amount: 150000,
+    donorName: "Alumni TPQ Srimulya",
+    isAnonymous: false,
+    sourceType: "SEDEKAH_TRACKER" as const,
+    recipientMasjidOrProject: "Masjid Al-Muhajirin (Srimulya)",
+    mosqueId: "msj-04",
+    purposeOrCategory: "Beasiswa SPP & Santunan Pendidikan 40 Santri Yatim",
+    paymentChannel: "Sedekah Berjamaah (Bulanan)",
+    status: "TERVERIFIKASI" as const,
+    notes: "Dukungan penuh untuk adik-adik santri yatim penghafal Quran.",
+  },
+  {
+    id: "sdq-seed-02",
+    referenceId: "SDQ-2026-441795",
+    date: new Date(Date.now() - 1000 * 60 * 60 * 26).toISOString(),
+    amount: 75000,
+    donorName: "Bpk. Rahmat Fauzi",
+    isAnonymous: false,
+    sourceType: "SEDEKAH_TRACKER" as const,
+    recipientMasjidOrProject: "Masjid Baiturrahman (Lebung Gajah)",
+    mosqueId: "msj-02",
+    purposeOrCategory: "Lumbung Beras & Sembako Darurat Mustahiq Bulanan",
+    paymentChannel: "Sedekah Berjamaah (Mingguan)",
+    status: "TERVERIFIKASI" as const,
+    notes: "Untuk lumbung pangan dhuafa.",
+  },
+].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
 // Default Initial Personalized Volunteer Profile
 const DEFAULT_ONBOARDED_USER: UserProfileOnboarding = {
@@ -79,10 +140,12 @@ const DEFAULT_ONBOARDED_USER: UserProfileOnboarding = {
 };
 
 export default function BerjamaahModule() {
+  const { showToast } = useToast();
   const [activeSubTab, setActiveSubTab] = useState<
     | "digital_honors"
     | "leaderboard"
     | "mosque_qr_donation"
+    | "donation_history"
     | "skill_map"
     | "community_polls"
     | "volunteer_spotlight"
@@ -121,6 +184,125 @@ export default function BerjamaahModule() {
 
   const [selectedKelurahan, setSelectedKelurahan] = useState<KelurahanData>(KELURAHAN_GIS_DATA[0]);
   const [eventsList, setEventsList] = useState<CommunityEvent[]>(COMMUNITY_EVENTS);
+
+  // Persistent Transaction History Log for Berjamaah Donations
+  const [donationHistory, setDonationHistory] = useState<BerjamaahDonationHistoryEntry[]>(() => {
+    try {
+      const saved = localStorage.getItem(BERJAMAAH_DONATION_HISTORY_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed;
+        }
+      }
+    } catch (e) {
+      console.log("Could not load donation history", e);
+    }
+    return INITIAL_BERJAMAAH_DONATION_HISTORY;
+  });
+
+  const persistDonationHistory = (entries: BerjamaahDonationHistoryEntry[]) => {
+    setDonationHistory(entries);
+    try {
+      localStorage.setItem(BERJAMAAH_DONATION_HISTORY_KEY, JSON.stringify(entries));
+    } catch (e) {
+      console.log("Could not persist donation history", e);
+    }
+  };
+
+  const handleLogMosqueDonation = (record: DonationRecord) => {
+    const entry: BerjamaahDonationHistoryEntry = {
+      id: record.id,
+      referenceId: record.transactionRef,
+      date: record.timestamp,
+      amount: record.amount,
+      donorName: record.donorName,
+      isAnonymous: record.isAnonymous,
+      sourceType: "QR_INFAQ_MASJID",
+      recipientMasjidOrProject: record.mosqueName,
+      mosqueId: record.mosqueId,
+      purposeOrCategory: record.purpose,
+      paymentChannel: record.channel,
+      status: "TERVERIFIKASI",
+    };
+
+    setDonationHistory((prev) => {
+      if (prev.some((item) => item.referenceId === entry.referenceId)) return prev;
+      const updated = [entry, ...prev];
+      try {
+        localStorage.setItem(BERJAMAAH_DONATION_HISTORY_KEY, JSON.stringify(updated));
+      } catch (e) {
+        console.log("Could not persist donation history", e);
+      }
+      return updated;
+    });
+  };
+
+  const handleLogSadaqahDonation = (
+    proj: SadaqahProject,
+    amt: number,
+    meta?: SadaqahDonationMeta
+  ) => {
+    const referenceId =
+      meta?.referenceId ||
+      `SDQ-${new Date().getFullYear()}-${Math.floor(100000 + Math.random() * 900000)}`;
+    const donorName = meta?.donorName || userProfile.fullName || "Hamba Allah";
+
+    const entry: BerjamaahDonationHistoryEntry = {
+      id: `sdq-${Date.now()}`,
+      referenceId,
+      date: new Date().toISOString(),
+      amount: amt,
+      donorName,
+      isAnonymous: donorName.toLowerCase() === "hamba allah",
+      sourceType: "SEDEKAH_TRACKER",
+      recipientMasjidOrProject: `${proj.masjidLocation} (${proj.kelurahan})`,
+      purposeOrCategory: proj.title,
+      paymentChannel: meta?.isRecurring
+        ? `Sedekah Berjamaah (${meta.frequency || "Harian"})`
+        : "Sedekah Berjamaah (Sekali)",
+      status: "TERVERIFIKASI",
+      notes: meta?.message,
+    };
+
+    setDonationHistory((prev) => {
+      if (prev.some((item) => item.referenceId === entry.referenceId)) return prev;
+      const updated = [entry, ...prev];
+      try {
+        localStorage.setItem(BERJAMAAH_DONATION_HISTORY_KEY, JSON.stringify(updated));
+      } catch (e) {
+        console.log("Could not persist donation history", e);
+      }
+      return updated;
+    });
+
+    showToast({
+      type: "success",
+      badge: "SEDEKAH TERCATAT",
+      title: "Sedekah Berjamaah Berhasil Dicatat!",
+      message: `Rp ${amt.toLocaleString("id-ID")} untuk "${proj.title}" • Ref: ${referenceId}`,
+    });
+    setOnboardingToast(
+      `Alhamdulillah! Sedekah Rp ${amt.toLocaleString("id-ID")} untuk "${proj.title}" berhasil ditunaikan (Ref: ${referenceId}).`
+    );
+    setTimeout(() => {
+      setOnboardingToast(null);
+    }, 5000);
+  };
+
+  const handleDeleteDonationHistoryEntry = (id: string) => {
+    const target = donationHistory.find((item) => item.id === id);
+    const updated = donationHistory.filter((item) => item.id !== id);
+    persistDonationHistory(updated);
+    showToast({
+      type: "info",
+      badge: "RIWAYAT DIHAPUS",
+      title: "Catatan Transaksi Dihapus",
+      message: target
+        ? `Transaksi ${target.referenceId} (${target.recipientMasjidOrProject}) dihapus dari log.`
+        : "Catatan transaksi berhasil dihapus.",
+    });
+  };
 
   // Save profile handler
   const handleSaveUserProfile = (profile: UserProfileOnboarding) => {
@@ -303,6 +485,22 @@ export default function BerjamaahModule() {
             >
               <QrCode className="w-3.5 h-3.5 text-emerald-400" />
               <span>QR Infaq Masjid (Transparan)</span>
+            </button>
+            <button
+              id="subtab-donation-history"
+              onClick={() => setActiveSubTab("donation_history")}
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition ${
+                activeSubTab === "donation_history"
+                  ? "bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-400 text-slate-950 shadow-md font-black ring-2 ring-emerald-400/40"
+                  : "text-emerald-300 hover:text-white hover:bg-emerald-900/60 border border-emerald-500/40"
+              }`}
+            >
+              <Receipt
+                className={`w-3.5 h-3.5 ${
+                  activeSubTab === "donation_history" ? "text-slate-950" : "text-emerald-400"
+                }`}
+              />
+              <span>Riwayat Donasi ({donationHistory.length})</span>
             </button>
             <button
               id="subtab-skill-map"
@@ -566,6 +764,15 @@ export default function BerjamaahModule() {
                 <span>QR Infaq Masjid</span>
               </button>
               <button
+                id="btn-open-donation-history-quick"
+                onClick={() => setActiveSubTab("donation_history")}
+                className="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-emerald-300 text-xs font-bold border border-slate-700 flex items-center gap-1.5 transition"
+                title="Lihat Riwayat Transaksi Donasi Berjamaah"
+              >
+                <Receipt className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Riwayat Donasi ({donationHistory.length})</span>
+              </button>
+              <button
                 onClick={() => setShowKtaModal(true)}
                 className="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold border border-slate-700 flex items-center gap-1.5 transition"
               >
@@ -639,7 +846,25 @@ export default function BerjamaahModule() {
 
       {/* SUBTAB: MOSQUE DONATION QR GENERATOR (TRANSPARENT DIGITAL INFAQ) */}
       {activeSubTab === "mosque_qr_donation" && (
-        <MosqueDonationQrGenerator />
+        <div className="space-y-6">
+          <MosqueDonationQrGenerator onDonationLogged={handleLogMosqueDonation} />
+          <BerjamaahDonationHistoryTable
+            history={donationHistory}
+            onDeleteEntry={handleDeleteDonationHistoryEntry}
+            onNavigateToQrDonation={() => setActiveSubTab("mosque_qr_donation")}
+            onNavigateToSadaqah={() => setActiveSubTab("sadaqah_tracker")}
+          />
+        </div>
+      )}
+
+      {/* SUBTAB: DONATION TRANSACTION HISTORY LOG */}
+      {activeSubTab === "donation_history" && (
+        <BerjamaahDonationHistoryTable
+          history={donationHistory}
+          onDeleteEntry={handleDeleteDonationHistoryEntry}
+          onNavigateToQrDonation={() => setActiveSubTab("mosque_qr_donation")}
+          onNavigateToSadaqah={() => setActiveSubTab("sadaqah_tracker")}
+        />
       )}
 
       {/* SUBTAB 00: COMMUNITY SKILL MAP (D3 NETWORK VISUALIZATION) */}
@@ -674,14 +899,15 @@ export default function BerjamaahModule() {
 
       {/* SUBTAB 01B: SADAQAH IMPACT TRACKER (PROGRESS RING & RECURRING SIMULATOR) */}
       {activeSubTab === "sadaqah_tracker" && (
-        <SadaqahImpactTracker
-          onSuccessDonation={(proj, amt) => {
-            setOnboardingToast(`Alhamdulillah! Sedekah Rp ${amt.toLocaleString("id-ID")} untuk "${proj.title}" berhasil ditunaikan.`);
-            setTimeout(() => {
-              setOnboardingToast(null);
-            }, 5000);
-          }}
-        />
+        <div className="space-y-6">
+          <SadaqahImpactTracker onSuccessDonation={handleLogSadaqahDonation} />
+          <BerjamaahDonationHistoryTable
+            history={donationHistory}
+            onDeleteEntry={handleDeleteDonationHistoryEntry}
+            onNavigateToQrDonation={() => setActiveSubTab("mosque_qr_donation")}
+            onNavigateToSadaqah={() => setActiveSubTab("sadaqah_tracker")}
+          />
+        </div>
       )}
 
       {/* SUBTAB 0A: COMMUNITY IMPACT DASHBOARD (RADIAL PROGRESS INDICATOR) */}
@@ -695,7 +921,7 @@ export default function BerjamaahModule() {
       )}
 
       {/* Overview Stat Counters (for GIS, Events, Talent, Library, & Attendance views) */}
-      {activeSubTab !== "social_mapping" && activeSubTab !== "impact_dashboard" && activeSubTab !== "service_journey" && activeSubTab !== "sadaqah_tracker" && activeSubTab !== "onboarding_wizard" && activeSubTab !== "volunteer_spotlight" && (
+      {activeSubTab !== "social_mapping" && activeSubTab !== "impact_dashboard" && activeSubTab !== "service_journey" && activeSubTab !== "sadaqah_tracker" && activeSubTab !== "onboarding_wizard" && activeSubTab !== "volunteer_spotlight" && activeSubTab !== "donation_history" && (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
           <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
             <div className="text-[11px] text-slate-500 font-medium">Populasi Muslim</div>

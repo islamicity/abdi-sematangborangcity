@@ -1069,6 +1069,40 @@ export interface WeeklySpiritualDigest {
   isAiGenerated: boolean;
 }
 
+export interface ZakatMaalHistoryEntry {
+  id: string;
+  gregorianYear: number;
+  hijriYear: string;
+  calculatedAt: string;
+  cashSavings: number;
+  goldAssets: number;
+  investments: number;
+  businessAssets: number;
+  shortTermDebts: number;
+  goldPricePerGram: number;
+  grossAssets: number;
+  netAssets: number;
+  nisabThreshold: number;
+  haulMet: boolean;
+  isObligatory: boolean;
+  zakatAmount: number;
+  status: "SUDAH_TUNAI" | "BELUM_TUNAI" | "DI_BAWAH_NISAB";
+  notes?: string;
+}
 
-
+export interface BerjamaahDonationHistoryEntry {
+  id: string;
+  referenceId: string;
+  date: string; // ISO timestamp
+  amount: number;
+  donorName: string;
+  isAnonymous?: boolean;
+  sourceType: "QR_INFAQ_MASJID" | "SEDEKAH_TRACKER";
+  recipientMasjidOrProject: string;
+  mosqueId?: string;
+  purposeOrCategory: string;
+  paymentChannel: string;
+  status: "TERVERIFIKASI";
+  notes?: string;
+}
 

@@ -38,6 +38,7 @@ import {
   DonationReceiptData,
   downloadDonationReceiptPdf,
 } from "../utils/donationReceiptPdf";
+import { useToast } from "../contexts/ToastContext";
 
 // Harmonic Audio Notification via Web Audio API
 const playSuccessChime = () => {
@@ -85,6 +86,7 @@ export default function DigitalQrDonation({
   initialProgram = "Lumbung Pangan Mustahiq Sematang Borang",
   onClose,
 }: DigitalQrDonationProps) {
+  const { showToast } = useToast();
   // Form Configuration
   const [donationType, setDonationType] = useState<
     "ZAKAT_MAL" | "ZAKAT_FITRAH" | "ZAKAT_PROFESI" | "INFAQ_SHODAQOH" | "WAKAF_PRODUKTIF" | "DANA_BENCANA" | "HIBAH_FASUM"
@@ -317,8 +319,14 @@ export default function DigitalQrDonation({
             setValidationProgress(100);
             setIsSimulatingScan(false);
 
-            // Trigger celebration chime & confetti
+            // Trigger celebration chime, toast & confetti
             playSuccessChime();
+            showToast({
+              type: "success",
+              badge: "QRIS TERVERIFIKASI",
+              title: "Donasi QRIS Berhasil Dicatat!",
+              message: `Rp ${finalTrx.amount.toLocaleString("id-ID")} (${akadDetails.categoryName}) a.n. ${finalTrx.donorName} tercatat di Buku Kas Publik. Ref: ${finalTrx.id}`,
+            });
             confetti({
               particleCount: 120,
               spread: 80,
@@ -402,6 +410,12 @@ Lacak transparansi: https://abdi.sematangborangcity.cloud`;
     setIsDownloadingPdf(true);
     try {
       await downloadDonationReceiptPdf(buildZiswafReceiptData(validatedTrx));
+      showToast({
+        type: "success",
+        badge: "e-KWITANSI PDF",
+        title: "Kwitansi PDF Berhasil Diunduh",
+        message: `Bukti donasi ${validatedTrx.id} siap disimpan atau dicetak.`,
+      });
     } finally {
       setIsDownloadingPdf(false);
     }

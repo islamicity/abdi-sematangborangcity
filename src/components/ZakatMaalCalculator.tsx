@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowRight,
   Banknote,
@@ -15,11 +15,18 @@ import {
   ShieldCheck,
   Sparkles,
   TrendingUp,
+  BookmarkPlus,
 } from "lucide-react";
+import { useToast } from "../contexts/ToastContext";
+import { ZakatMaalHistoryEntry } from "../types";
 
 interface ZakatMaalCalculatorProps {
   onProceedToQrDonation?: (amount: number) => void;
   onApplyToPortal?: (amount: number) => void;
+  onSaveToHistory?: (
+    entry: Omit<ZakatMaalHistoryEntry, "id" | "calculatedAt">
+  ) => void;
+  presetEntry?: ZakatMaalHistoryEntry | null;
 }
 
 const formatRupiah = (value: number) => `Rp ${Math.round(value).toLocaleString("id-ID")}`;
@@ -36,6 +43,8 @@ function formatInputNumber(value: number): string {
 export default function ZakatMaalCalculator({
   onProceedToQrDonation,
   onApplyToPortal,
+  onSaveToHistory,
+  presetEntry,
 }: ZakatMaalCalculatorProps) {
   // Asset Inputs (IDR)
   const [cashSavings, setCashSavings] = useState<number>(80000000);
@@ -48,6 +57,32 @@ export default function ZakatMaalCalculator({
   const [goldPricePerGram, setGoldPricePerGram] = useState<number>(1350000);
   const [haulMet, setHaulMet] = useState<boolean>(true);
   const [includeBelowNisabEstimate, setIncludeBelowNisabEstimate] = useState<boolean>(false);
+  const [selectedYear, setSelectedYear] = useState<number>(2026);
+  const [calculationNotes, setCalculationNotes] = useState<string>("");
+
+  const { showToast } = useToast();
+  const hasInteractedRef = useRef<boolean>(false);
+
+  const hijriYearMap: Record<number, string> = {
+    2024: "1445/1446 H",
+    2025: "1446/1447 H",
+    2026: "1448 H",
+    2027: "1449 H",
+  };
+
+  useEffect(() => {
+    if (!presetEntry) return;
+    hasInteractedRef.current = false;
+    setCashSavings(presetEntry.cashSavings);
+    setGoldAssets(presetEntry.goldAssets);
+    setInvestments(presetEntry.investments);
+    setBusinessAssets(presetEntry.businessAssets);
+    setShortTermDebts(presetEntry.shortTermDebts);
+    setGoldPricePerGram(presetEntry.goldPricePerGram);
+    setHaulMet(presetEntry.haulMet);
+    setSelectedYear(presetEntry.gregorianYear);
+    setCalculationNotes(presetEntry.notes || "");
+  }, [presetEntry]);
 
   const calculation = useMemo(() => {
     const grossAssets = cashSavings + goldAssets + investments + businessAssets;
@@ -85,15 +120,67 @@ export default function ZakatMaalCalculator({
     haulMet,
   ]);
 
+  const triggerCalculationToast = (calc = calculation) => {
+    if (calc.isObligatory) {
+      showToast({
+        id: "zakat-maal-calc",
+        type: "success",
+        badge: "WAJIB ZAKAT 2,5%",
+        title: "Perhitungan Zakat Maal Selesai",
+        message: `Harta bersih ${formatRupiah(calc.netAssets)} telah mencapai nisab. Kewajiban zakat 2,5%: ${formatRupiah(calc.obligatoryZakat)}.`,
+      });
+    } else if (calc.netAssets > 0) {
+      showToast({
+        id: "zakat-maal-calc",
+        type: "info",
+        badge: "HASIL HITUNG ZAKAT",
+        title: calc.reachesNisab
+          ? "Mencapai Nisab (Menunggu Haul)"
+          : "Belum Mencapai Nisab (85 gr Emas)",
+        message: `Harta bersih ${formatRupiah(calc.netAssets)}. Estimasi 2,5% bila ditunaikan dini: ${formatRupiah(calc.rawZakat25Pct)}.`,
+      });
+    } else {
+      showToast({
+        id: "zakat-maal-calc",
+        type: "warning",
+        badge: "KALKULATOR ZAKAT",
+        title: "Harta Bersih Bernilai Rp 0",
+        message: "Masukkan total aset simpanan Anda untuk menghitung kewajiban Zakat Maal 2,5%.",
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (!hasInteractedRef.current) return;
+    const timer = window.setTimeout(() => {
+      triggerCalculationToast(calculation);
+    }, 750);
+    return () => window.clearTimeout(timer);
+  }, [calculation]);
+
+  const handleFieldUpdate = (setter: (val: number) => void, raw: string) => {
+    hasInteractedRef.current = true;
+    setter(parseNumericInput(raw));
+  };
+
   const handleResetZero = () => {
+    hasInteractedRef.current = false;
     setCashSavings(0);
     setGoldAssets(0);
     setInvestments(0);
     setBusinessAssets(0);
     setShortTermDebts(0);
+    showToast({
+      id: "zakat-maal-calc",
+      type: "info",
+      badge: "RESET INPUT",
+      title: "Nilai Aset Dikosongkan",
+      message: "Seluruh kolom aset & hutang direset ke Rp 0. Silakan masukkan data aset Anda.",
+    });
   };
 
   const handleLoadSample = () => {
+    hasInteractedRef.current = false;
     setCashSavings(80000000);
     setGoldAssets(35000000);
     setInvestments(45000000);
@@ -101,6 +188,13 @@ export default function ZakatMaalCalculator({
     setShortTermDebts(15000000);
     setGoldPricePerGram(1350000);
     setHaulMet(true);
+    showToast({
+      id: "zakat-maal-calc",
+      type: "success",
+      badge: "SIMULASI ZAKAT MAAL",
+      title: "Contoh Portofolio Dimuat & Dihitung",
+      message: "Harta bersih Rp 170.000.000 • Kewajiban Zakat Maal 2,5%: Rp 4.250.000.",
+    });
   };
 
   const assetFields = [
@@ -248,7 +342,7 @@ export default function ZakatMaalCalculator({
                       type="text"
                       inputMode="numeric"
                       value={formatInputNumber(field.value)}
-                      onChange={(e) => field.setter(parseNumericInput(e.target.value))}
+                      onChange={(e) => handleFieldUpdate(field.setter, e.target.value)}
                       placeholder="0"
                       className="w-full pl-9 pr-3 py-2 bg-white border border-slate-300 rounded-lg text-sm font-mono font-bold text-slate-900 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 focus:outline-none"
                     />
@@ -286,7 +380,7 @@ export default function ZakatMaalCalculator({
                 type="text"
                 inputMode="numeric"
                 value={formatInputNumber(shortTermDebts)}
-                onChange={(e) => setShortTermDebts(parseNumericInput(e.target.value))}
+                onChange={(e) => handleFieldUpdate(setShortTermDebts, e.target.value)}
                 placeholder="0"
                 className="w-full pl-9 pr-3 py-2 bg-white border border-rose-300 rounded-lg text-sm font-mono font-bold text-slate-900 focus:ring-2 focus:ring-rose-500 focus:outline-none"
               />
@@ -314,7 +408,7 @@ export default function ZakatMaalCalculator({
                   type="text"
                   inputMode="numeric"
                   value={formatInputNumber(goldPricePerGram)}
-                  onChange={(e) => setGoldPricePerGram(parseNumericInput(e.target.value))}
+                  onChange={(e) => handleFieldUpdate(setGoldPricePerGram, e.target.value)}
                   placeholder="1.350.000"
                   className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-xs font-mono font-bold text-slate-900 focus:ring-2 focus:ring-teal-500 focus:outline-none"
                 />
@@ -335,7 +429,10 @@ export default function ZakatMaalCalculator({
                 <input
                   type="checkbox"
                   checked={haulMet}
-                  onChange={(e) => setHaulMet(e.target.checked)}
+                  onChange={(e) => {
+                    hasInteractedRef.current = true;
+                    setHaulMet(e.target.checked);
+                  }}
                   className="mt-0.5 rounded text-teal-600 focus:ring-teal-500"
                 />
                 <span className="text-[11px] text-slate-700 leading-snug">
@@ -343,6 +440,101 @@ export default function ZakatMaalCalculator({
                 </span>
               </label>
             </div>
+          </div>
+
+          {/* Annual Tracking Period & Notes */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-100">
+            <div className="space-y-1.5">
+              <label
+                htmlFor="zakat-haul-year"
+                className="block text-xs font-bold text-slate-700"
+              >
+                Tahun Haul / Kewajiban Tahunan
+              </label>
+              <select
+                id="zakat-haul-year"
+                value={selectedYear}
+                onChange={(e) => setSelectedYear(Number(e.target.value))}
+                className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-xs font-bold text-slate-900 focus:ring-2 focus:ring-teal-500 focus:outline-none"
+              >
+                <option value={2027}>2027 (1449 H)</option>
+                <option value={2026}>2026 (1448 H)</option>
+                <option value={2025}>2025 (1446/1447 H)</option>
+                <option value={2024}>2024 (1445/1446 H)</option>
+              </select>
+            </div>
+
+            <div className="space-y-1.5">
+              <label
+                htmlFor="zakat-calc-notes"
+                className="block text-xs font-bold text-slate-700"
+              >
+                Catatan Riwayat (Opsional)
+              </label>
+              <input
+                id="zakat-calc-notes"
+                type="text"
+                value={calculationNotes}
+                onChange={(e) => setCalculationNotes(e.target.value)}
+                placeholder="Misal: Audit Haul Ramadhan / Bonus Akhir Tahun"
+                className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-xs text-slate-900 focus:ring-2 focus:ring-teal-500 focus:outline-none"
+              />
+            </div>
+          </div>
+
+          <div className="pt-2 grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <button
+              type="button"
+              onClick={() => triggerCalculationToast(calculation)}
+              className="w-full py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-sm transition flex items-center justify-center gap-2"
+            >
+              <Calculator className="w-4 h-4 text-emerald-400" />
+              <span>Hitung &amp; Verifikasi (2,5%)</span>
+            </button>
+
+            {onSaveToHistory && (
+              <button
+                type="button"
+                onClick={() => {
+                  const payable = calculation.isObligatory
+                    ? calculation.obligatoryZakat
+                    : includeBelowNisabEstimate
+                    ? calculation.rawZakat25Pct
+                    : 0;
+                  const status: ZakatMaalHistoryEntry["status"] =
+                    !calculation.reachesNisab && !includeBelowNisabEstimate
+                      ? "DI_BAWAH_NISAB"
+                      : payable > 0
+                      ? "BELUM_TUNAI"
+                      : "DI_BAWAH_NISAB";
+
+                  onSaveToHistory({
+                    gregorianYear: selectedYear,
+                    hijriYear: hijriYearMap[selectedYear] || `${selectedYear - 578} H`,
+                    cashSavings,
+                    goldAssets,
+                    investments,
+                    businessAssets,
+                    shortTermDebts,
+                    goldPricePerGram,
+                    grossAssets: calculation.grossAssets,
+                    netAssets: calculation.netAssets,
+                    nisabThreshold: calculation.nisabThreshold,
+                    haulMet,
+                    isObligatory: calculation.isObligatory || (includeBelowNisabEstimate && payable > 0),
+                    zakatAmount: payable,
+                    status,
+                    notes:
+                      calculationNotes.trim() ||
+                      `Perhitungan Aset ${selectedYear} (${hijriYearMap[selectedYear] || ""})`,
+                  });
+                }}
+                className="w-full py-2.5 px-4 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs shadow-sm transition flex items-center justify-center gap-2"
+              >
+                <BookmarkPlus className="w-4 h-4" />
+                <span>Simpan ke Riwayat Tahunan</span>
+              </button>
+            )}
           </div>
         </div>
 
@@ -501,7 +693,16 @@ export default function ZakatMaalCalculator({
                 <button
                   type="button"
                   disabled={effectivePayable <= 0}
-                  onClick={() => onProceedToQrDonation(effectivePayable)}
+                  onClick={() => {
+                    showToast({
+                      id: "zakat-maal-proceed",
+                      type: "info",
+                      badge: "AKAD ZAKAT MAAL",
+                      title: "Nominal Zakat Diterapkan ke QRIS",
+                      message: `Membuka QRIS Dinamis dengan nominal ${formatRupiah(effectivePayable)}.`,
+                    });
+                    onProceedToQrDonation(effectivePayable);
+                  }}
                   className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs shadow-md transition flex items-center justify-center gap-2 disabled:opacity-45 disabled:cursor-not-allowed"
                 >
                   <QrCode className="w-4 h-4" />
@@ -517,7 +718,16 @@ export default function ZakatMaalCalculator({
               {onApplyToPortal && effectivePayable > 0 && (
                 <button
                   type="button"
-                  onClick={() => onApplyToPortal(effectivePayable)}
+                  onClick={() => {
+                    showToast({
+                      id: "zakat-maal-portal",
+                      type: "success",
+                      badge: "PORTAL ZISWAF",
+                      title: "Nominal Zakat Disalin ke Formulir",
+                      message: `Formulir ZISWAF siap dengan nominal Zakat Maal ${formatRupiah(effectivePayable)}.`,
+                    });
+                    onApplyToPortal(effectivePayable);
+                  }}
                   className="w-full py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs border border-slate-200 transition flex items-center justify-center gap-1.5"
                 >
                   <ShieldCheck className="w-4 h-4 text-teal-700" />

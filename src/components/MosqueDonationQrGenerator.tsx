@@ -37,6 +37,7 @@ import {
   DonationReceiptData,
   downloadDonationReceiptPdf,
 } from "../utils/donationReceiptPdf";
+import { useToast } from "../contexts/ToastContext";
 
 // Pre-defined Verified Mosques in Sematang Borang
 export interface MosqueItem {
@@ -134,7 +135,7 @@ export interface DonationRecord {
   channel: string;
 }
 
-const INITIAL_TRANSPARENT_LEDGER: DonationRecord[] = [
+export const INITIAL_TRANSPARENT_LEDGER: DonationRecord[] = [
   {
     id: "trx-901",
     mosqueId: "msj-01",
@@ -215,7 +216,14 @@ const PRESET_AMOUNTS = [
   { value: 500000, label: "Rp 500.000", tag: "Wakaf Sarpras" },
 ];
 
-export default function MosqueDonationQrGenerator() {
+export interface MosqueDonationQrGeneratorProps {
+  onDonationLogged?: (record: DonationRecord) => void;
+}
+
+export default function MosqueDonationQrGenerator({
+  onDonationLogged,
+}: MosqueDonationQrGeneratorProps = {}) {
+  const { showToast } = useToast();
   // Mosque Selection State
   const [selectedMosqueId, setSelectedMosqueId] = useState<string>("msj-01");
   const [customMosqueName, setCustomMosqueName] = useState<string>("");
@@ -348,6 +356,17 @@ export default function MosqueDonationQrGenerator() {
       setSimulatedReceipt(newRecord);
       setIsSimulatingPayment(false);
 
+      if (onDonationLogged) {
+        onDonationLogged(newRecord);
+      }
+
+      showToast({
+        type: "success",
+        badge: "INFAQ MASJID",
+        title: "Donasi Masjid Berhasil Dicatat!",
+        message: `Rp ${finalAmount.toLocaleString("id-ID")} ke ${currentMosque.name} a.n. ${effectiveDonor} • Ref: ${newRecord.transactionRef}`,
+      });
+
       // Play chime & burst celebratory confetti
       try {
         confetti({
@@ -430,6 +449,12 @@ Verifikasi Transparansi di abdi.sematangborangcity.cloud/berjamaah`;
     setDownloadingReceiptId(record.id);
     try {
       await downloadDonationReceiptPdf(buildReceiptData(record));
+      showToast({
+        type: "success",
+        badge: "KWITANSI PDF",
+        title: "Kwitansi Infaq PDF Diunduh",
+        message: `Kwitansi ${record.transactionRef} (${record.mosqueName}) berhasil disimpan.`,
+      });
     } finally {
       setDownloadingReceiptId(null);
     }

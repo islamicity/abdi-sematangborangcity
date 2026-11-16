@@ -13,6 +13,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { PillarType } from "../types";
+import { getJakartaDateParts } from "../utils/prayerTimes";
 
 interface NavbarProps {
   activePillar: PillarType;
@@ -34,18 +35,14 @@ export default function Navbar({
   setSearchQuery = () => {},
 }: NavbarProps) {
   const setPillar = onSelectPillar || setActivePillar || (() => {});
-  const [time, setTime] = useState<string>("");
+  const [time, setTime] = useState<string>(() => getJakartaDateParts().formattedTime);
+  const [hijriDate, setHijriDate] = useState<string>(() => getJakartaDateParts().hijriDate);
 
   useEffect(() => {
     const updateTime = () => {
-      const now = new Date();
-      setTime(
-        now.toLocaleTimeString("id-ID", {
-          hour: "2-digit",
-          minute: "2-digit",
-          second: "2-digit",
-        }) + " WIB"
-      );
+      const parts = getJakartaDateParts(new Date());
+      setTime(parts.formattedTime);
+      setHijriDate(parts.hijriDate);
     };
     updateTime();
     const interval = setInterval(updateTime, 1000);
@@ -112,7 +109,7 @@ export default function Navbar({
             <span>{time || "Memuat..."}</span>
           </div>
           <span className="hidden md:inline-block bg-emerald-800/80 text-emerald-300 px-2 py-0.5 rounded font-mono text-[11px] border border-emerald-700/50">
-            1 Safar 1448 H
+            {hijriDate}
           </span>
           <span className="inline-flex items-center gap-1 bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 px-2 py-0.5 rounded-full text-[10px] font-medium">
             <CheckCircle2 className="w-3 h-3 text-emerald-400" />

@@ -230,8 +230,20 @@ const playDonationChime = () => {
   }
 };
 
+export interface SadaqahDonationMeta {
+  donorName: string;
+  isRecurring: boolean;
+  frequency?: string;
+  message?: string;
+  referenceId: string;
+}
+
 interface SadaqahImpactTrackerProps {
-  onSuccessDonation?: (project: SadaqahProject, amount: number) => void;
+  onSuccessDonation?: (
+    project: SadaqahProject,
+    amount: number,
+    meta?: SadaqahDonationMeta
+  ) => void;
 }
 
 export const SadaqahImpactTracker: FC<SadaqahImpactTrackerProps> = ({
@@ -348,7 +360,16 @@ export const SadaqahImpactTracker: FC<SadaqahImpactTrackerProps> = ({
     }, 4500);
 
     if (onSuccessDonation) {
-      onSuccessDonation(activeProject, customDonationAmount);
+      const referenceId = `SDQ-${new Date().getFullYear()}-${Math.floor(
+        100000 + Math.random() * 900000
+      )}`;
+      onSuccessDonation(activeProject, customDonationAmount, {
+        donorName: donorNameInput.trim() || "Hamba Allah",
+        isRecurring: isRecurringChecked,
+        frequency: isRecurringChecked ? "Harian" : undefined,
+        message: donorMessageInput.trim() || undefined,
+        referenceId,
+      });
     }
   };
 

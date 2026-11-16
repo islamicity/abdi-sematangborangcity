@@ -24,7 +24,7 @@ import {
   Printer,
   FileText,
 } from "lucide-react";
-import { ZiswafTransaction, MarketplaceProduct } from "../types";
+import { ZiswafTransaction, MarketplaceProduct, ZakatMaalHistoryEntry } from "../types";
 import { INITIAL_ZISWAF_TRANSACTIONS, INITIAL_MARKETPLACE_PRODUCTS } from "../data/mockData";
 import ZiswafVisualReport from "./ZiswafVisualReport";
 import PrintableCommunityReportModal from "./PrintableCommunityReportModal";
@@ -34,9 +34,76 @@ import ZiswafhGeospatialMap from "./ZiswafhGeospatialMap";
 import MuamalahAwardsBadgeSystem from "./MuamalahAwardsBadgeSystem";
 import DigitalQrDonation from "./DigitalQrDonation";
 import ZakatMaalCalculator from "./ZakatMaalCalculator";
+import ZakatMaalHistoryTable from "./ZakatMaalHistoryTable";
+import ZakatContributionSummaryChart from "./ZakatContributionSummaryChart";
 import { Compass, Trophy, QrCode as QrCodeIcon } from "lucide-react";
+import { useToast } from "../contexts/ToastContext";
+
+const INITIAL_ZAKAT_MAAL_HISTORY: ZakatMaalHistoryEntry[] = [
+  {
+    id: "ZKM-2026-01",
+    gregorianYear: 2026,
+    hijriYear: "1448 H",
+    calculatedAt: "2026-11-10T09:15:00.000Z",
+    cashSavings: 80000000,
+    goldAssets: 35000000,
+    investments: 45000000,
+    businessAssets: 25000000,
+    shortTermDebts: 15000000,
+    goldPricePerGram: 1350000,
+    grossAssets: 185000000,
+    netAssets: 170000000,
+    nisabThreshold: 114750000,
+    haulMet: true,
+    isObligatory: true,
+    zakatAmount: 4250000,
+    status: "BELUM_TUNAI",
+    notes: "Audit Portofolio & Tabungan Haul 1448 H",
+  },
+  {
+    id: "ZKM-2025-01",
+    gregorianYear: 2025,
+    hijriYear: "1446/1447 H",
+    calculatedAt: "2025-03-22T14:30:00.000Z",
+    cashSavings: 68000000,
+    goldAssets: 32000000,
+    investments: 36000000,
+    businessAssets: 28000000,
+    shortTermDebts: 10000000,
+    goldPricePerGram: 1250000,
+    grossAssets: 164000000,
+    netAssets: 154000000,
+    nisabThreshold: 106250000,
+    haulMet: true,
+    isObligatory: true,
+    zakatAmount: 3850000,
+    status: "SUDAH_TUNAI",
+    notes: "Zakat Maal Ramadhan 1446 H (Lunas via QRIS)",
+  },
+  {
+    id: "ZKM-2024-01",
+    gregorianYear: 2024,
+    hijriYear: "1445/1446 H",
+    calculatedAt: "2024-04-01T10:05:00.000Z",
+    cashSavings: 58000000,
+    goldAssets: 28000000,
+    investments: 30000000,
+    businessAssets: 24000000,
+    shortTermDebts: 8000000,
+    goldPricePerGram: 1180000,
+    grossAssets: 140000000,
+    netAssets: 132000000,
+    nisabThreshold: 100300000,
+    haulMet: true,
+    isObligatory: true,
+    zakatAmount: 3300000,
+    status: "SUDAH_TUNAI",
+    notes: "Pelaporan Kewajiban Tahunan 1445 H",
+  },
+];
 
 export default function BermuamalahModule() {
+  const { showToast } = useToast();
   const [activeSubTab, setActiveSubTab] = useState<
     "qr_donation" | "zakat_calculator" | "ziswaf_portal" | "marketplace" | "impact_report" | "ziswaf_forecast" | "geospatial_ziswafh" | "muamalah_awards"
   >("qr_donation");
@@ -156,6 +223,88 @@ export default function BermuamalahModule() {
   const [monthlyIncome, setMonthlyIncome] = useState<number>(12000000);
   const [monthlyExpenses, setMonthlyExpenses] = useState<number>(4000000);
 
+  // Zakat Maal Annual Calculation History Log State (Persisted to localStorage)
+  const [zakatHistory, setZakatHistory] = useState<ZakatMaalHistoryEntry[]>(() => {
+    try {
+      const saved = localStorage.getItem("abdi_zakat_maal_history_v1");
+      return saved ? JSON.parse(saved) : INITIAL_ZAKAT_MAAL_HISTORY;
+    } catch {
+      return INITIAL_ZAKAT_MAAL_HISTORY;
+    }
+  });
+  const [loadedZakatPreset, setLoadedZakatPreset] = useState<ZakatMaalHistoryEntry | null>(null);
+
+  const persistZakatHistory = (next: ZakatMaalHistoryEntry[]) => {
+    setZakatHistory(next);
+    try {
+      localStorage.setItem("abdi_zakat_maal_history_v1", JSON.stringify(next));
+    } catch {}
+  };
+
+  const handleSaveZakatHistory = (
+    entry: Omit<ZakatMaalHistoryEntry, "id" | "calculatedAt">
+  ) => {
+    const newEntry: ZakatMaalHistoryEntry = {
+      ...entry,
+      id: `ZKM-${entry.gregorianYear}-${Date.now().toString().slice(-4)}`,
+      calculatedAt: new Date().toISOString(),
+    };
+    const updated = [newEntry, ...zakatHistory];
+    persistZakatHistory(updated);
+
+    showToast({
+      type: "success",
+      badge: "RIWAYAT ZAKAT TERSIMPAN",
+      title: `Kewajiban Tahun ${entry.gregorianYear} Dicatat`,
+      message: `Harta bersih Rp ${entry.netAssets.toLocaleString("id-ID")} • Zakat 2,5%: Rp ${entry.zakatAmount.toLocaleString("id-ID")} tersimpan ke tabel riwayat.`,
+    });
+  };
+
+  const handleToggleZakatPaidStatus = (id: string) => {
+    let updatedLabel = "";
+    const updated = zakatHistory.map((item) => {
+      if (item.id !== id || item.status === "DI_BAWAH_NISAB") return item;
+      const nextStatus: ZakatMaalHistoryEntry["status"] =
+        item.status === "SUDAH_TUNAI" ? "BELUM_TUNAI" : "SUDAH_TUNAI";
+      updatedLabel = nextStatus === "SUDAH_TUNAI" ? "Sudah Ditunaikan" : "Belum Ditunaikan";
+      return { ...item, status: nextStatus };
+    });
+    persistZakatHistory(updated);
+    if (updatedLabel) {
+      showToast({
+        type: "info",
+        badge: "STATUS KEWAJIBAN",
+        title: `Status Diubah: ${updatedLabel}`,
+        message: `Catatan ${id} diperbarui di pelacakan kewajiban tahunan.`,
+      });
+    }
+  };
+
+  const handleDeleteZakatHistory = (id: string) => {
+    const updated = zakatHistory.filter((item) => item.id !== id);
+    persistZakatHistory(updated);
+    showToast({
+      type: "info",
+      badge: "RIWAYAT DIHAPUS",
+      title: "Catatan Riwayat Dihapus",
+      message: `Entri perhitungan ${id} telah dihapus dari tabel riwayat.`,
+    });
+  };
+
+  const markLatestPendingZakatPaid = (paidAmount: number) => {
+    let matched = false;
+    const updated = zakatHistory.map((item) => {
+      if (!matched && item.status === "BELUM_TUNAI" && Math.abs(item.zakatAmount - paidAmount) <= 1000) {
+        matched = true;
+        return { ...item, status: "SUDAH_TUNAI" as const };
+      }
+      return item;
+    });
+    if (matched) {
+      persistZakatHistory(updated);
+    }
+  };
+
   // Marketplace State
   const [productList, setProductList] = useState<MarketplaceProduct[]>(INITIAL_MARKETPLACE_PRODUCTS);
   const [marketCategory, setMarketCategory] = useState<string>("Semua");
@@ -209,7 +358,17 @@ export default function BermuamalahModule() {
     };
 
     setZiswafList((prev) => [newTrx, ...prev]);
+    if (donationType === "ZAKAT_MAL") {
+      markLatestPendingZakatPaid(donationAmount);
+    }
     setIsDonationSuccess(true);
+
+    showToast({
+      type: "success",
+      badge: "DONASI TERCATAT",
+      title: "Donasi ZISWAF Berhasil Dicatat!",
+      message: `Rp ${donationAmount.toLocaleString("id-ID")} a.n. ${newTrx.donorName} untuk ${donationProgram}. Ref: ${newTrx.id}`,
+    });
 
     try {
       confetti({
@@ -291,7 +450,12 @@ export default function BermuamalahModule() {
     setIsAddProductOpen(false);
     setNewProdName("");
     setNewProdDesc("");
-    alert("Produk UMKM Syariah berhasil ditambahkan ke Marketplace!");
+    showToast({
+      type: "success",
+      badge: "PASAR MUAMALAH",
+      title: "Produk UMKM Syariah Diterbitkan",
+      message: `"${newProd.name}" berhasil ditambahkan ke Marketplace.`,
+    });
   };
 
   const filteredProducts = productList.filter((p) => {
@@ -445,27 +609,65 @@ export default function BermuamalahModule() {
           initialType={qrDonationPreset.type}
           onDonationConfirmed={(newTrx) => {
             setZiswafList((prev) => [newTrx, ...prev]);
+            if (newTrx.type === "ZAKAT_MAL") {
+              markLatestPendingZakatPaid(newTrx.amount);
+            }
           }}
         />
       )}
 
-      {/* SUBTAB 0.1: DEDICATED ZAKAT MAAL CALCULATOR TOOL */}
+      {/* SUBTAB 0.1: DEDICATED ZAKAT MAAL CALCULATOR TOOL & ANNUAL HISTORY LOG */}
       {activeSubTab === "zakat_calculator" && (
-        <ZakatMaalCalculator
-          onProceedToQrDonation={(calculatedAmount) => {
-            setQrDonationPreset({
-              amount: calculatedAmount,
-              type: "ZAKAT_MAL",
-              nonce: Date.now(),
-            });
-            setActiveSubTab("qr_donation");
-          }}
-          onApplyToPortal={(calculatedAmount) => {
-            setDonationType("ZAKAT_MAL");
-            setDonationAmount(calculatedAmount);
-            setActiveSubTab("ziswaf_portal");
-          }}
-        />
+        <div className="space-y-6">
+          <ZakatMaalCalculator
+            presetEntry={loadedZakatPreset}
+            onSaveToHistory={handleSaveZakatHistory}
+            onProceedToQrDonation={(calculatedAmount) => {
+              setQrDonationPreset({
+                amount: calculatedAmount,
+                type: "ZAKAT_MAL",
+                nonce: Date.now(),
+              });
+              setActiveSubTab("qr_donation");
+            }}
+            onApplyToPortal={(calculatedAmount) => {
+              setDonationType("ZAKAT_MAL");
+              setDonationAmount(calculatedAmount);
+              setActiveSubTab("ziswaf_portal");
+            }}
+          />
+
+          <ZakatContributionSummaryChart zakatHistory={zakatHistory} />
+
+          <ZakatMaalHistoryTable
+            history={zakatHistory}
+            onTogglePaidStatus={handleToggleZakatPaidStatus}
+            onDeleteEntry={handleDeleteZakatHistory}
+            onLoadIntoCalculator={(entry) => {
+              setLoadedZakatPreset({ ...entry });
+              showToast({
+                type: "info",
+                badge: "DATA DIMUAT",
+                title: `Riwayat ${entry.gregorianYear} Dimuat`,
+                message: `Rincian aset (${entry.hijriYear}) dimuat kembali ke Kalkulator Zakat Maal.`,
+              });
+            }}
+            onPayViaQr={(entry) => {
+              setQrDonationPreset({
+                amount: entry.zakatAmount,
+                type: "ZAKAT_MAL",
+                nonce: Date.now(),
+              });
+              setActiveSubTab("qr_donation");
+              showToast({
+                type: "info",
+                badge: "PEMBAYARAN ZAKAT",
+                title: "Menuju QRIS Pembayaran Zakat",
+                message: `Membuka QRIS untuk kewajiban ${entry.gregorianYear} sebesar Rp ${entry.zakatAmount.toLocaleString("id-ID")}.`,
+              });
+            }}
+          />
+        </div>
       )}
 
       {/* SUBTAB 0: MUAMALAH AWARDS & BADGE SYSTEM */}
@@ -573,6 +775,9 @@ export default function BermuamalahModule() {
             </div>
           </div>
 
+          {/* Annual Zakat Maal Distribution & Contribution Trend Summary Chart */}
+          <ZakatContributionSummaryChart zakatHistory={zakatHistory} />
+
           {/* Form Transaksi & Kalkulator Row */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
             {/* Kalkulator Zakat Syariah */}
@@ -661,15 +866,51 @@ export default function BermuamalahModule() {
                   </div>
 
                   {isWajibZakatMal && (
-                    <button
-                      onClick={() => {
-                        setDonationType("ZAKAT_MAL");
-                        setDonationAmount(calculatedZakatMal);
-                      }}
-                      className="w-full py-2 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl text-xs transition shadow-sm"
-                    >
-                      Tunaikan Zakat Mal Ini (Rp {calculatedZakatMal.toLocaleString("id-ID")})
-                    </button>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setDonationType("ZAKAT_MAL");
+                          setDonationAmount(calculatedZakatMal);
+                          showToast({
+                            id: "zakat-mal-inline",
+                            type: "success",
+                            badge: "ZAKAT MAL 2,5%",
+                            title: "Perhitungan Zakat Mal Diterapkan",
+                            message: `Kewajiban Zakat Mal 2,5% sebesar Rp ${calculatedZakatMal.toLocaleString("id-ID")} diisikan ke formulir ZISWAF.`,
+                          });
+                        }}
+                        className="w-full py-2 px-3 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl text-xs transition shadow-sm"
+                      >
+                        Tunaikan (Rp {calculatedZakatMal.toLocaleString("id-ID")})
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          handleSaveZakatHistory({
+                            gregorianYear: 2026,
+                            hijriYear: "1448 H",
+                            cashSavings: totalAssetValue,
+                            goldAssets: 0,
+                            investments: 0,
+                            businessAssets: 0,
+                            shortTermDebts: debtValue,
+                            goldPricePerGram,
+                            grossAssets: totalAssetValue,
+                            netAssets: netMalAsset,
+                            nisabThreshold: nisabMal,
+                            haulMet: true,
+                            isObligatory: isWajibZakatMal,
+                            zakatAmount: calculatedZakatMal,
+                            status: "BELUM_TUNAI",
+                            notes: "Disimpan dari Kalkulator Ringkas Portal ZISWAF",
+                          })
+                        }
+                        className="w-full py-2 px-3 bg-slate-900 hover:bg-slate-800 text-emerald-300 font-bold rounded-xl text-xs transition shadow-sm"
+                      >
+                        Simpan ke Riwayat
+                      </button>
+                    </div>
                   )}
                 </div>
               ) : (
@@ -703,8 +944,16 @@ export default function BermuamalahModule() {
 
                   <button
                     onClick={() => {
+                      const amt = calculatedZakatProfesi || 100000;
                       setDonationType("ZAKAT_PROFESI");
-                      setDonationAmount(calculatedZakatProfesi || 100000);
+                      setDonationAmount(amt);
+                      showToast({
+                        id: "zakat-profesi-inline",
+                        type: "success",
+                        badge: "ZAKAT PROFESI 2,5%",
+                        title: "Perhitungan Zakat Profesi Diterapkan",
+                        message: `Nominal Rp ${amt.toLocaleString("id-ID")} siap ditunaikan melalui formulir ZISWAF.`,
+                      });
                     }}
                     className="w-full py-2 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl text-xs transition shadow-sm"
                   >
@@ -922,6 +1171,31 @@ export default function BermuamalahModule() {
               </table>
             </div>
           </div>
+
+          {/* Zakat Maal Annual Calculation History Log Table */}
+          <ZakatMaalHistoryTable
+            history={zakatHistory}
+            onTogglePaidStatus={handleToggleZakatPaidStatus}
+            onDeleteEntry={handleDeleteZakatHistory}
+            onLoadIntoCalculator={(entry) => {
+              setLoadedZakatPreset({ ...entry });
+              setActiveSubTab("zakat_calculator");
+              showToast({
+                type: "info",
+                badge: "DATA DIMUAT",
+                title: `Riwayat ${entry.gregorianYear} Dimuat`,
+                message: `Rincian aset (${entry.hijriYear}) dibuka di Kalkulator Zakat Maal.`,
+              });
+            }}
+            onPayViaQr={(entry) => {
+              setQrDonationPreset({
+                amount: entry.zakatAmount,
+                type: "ZAKAT_MAL",
+                nonce: Date.now(),
+              });
+              setActiveSubTab("qr_donation");
+            }}
+          />
         </div>
       )}
 
@@ -1221,7 +1495,12 @@ export default function BermuamalahModule() {
               </button>
               <button
                 onClick={() => {
-                  alert(`Pemesanan produk "${selectedProduct.name}" berhasil diteruskan ke Penjual (${selectedProduct.sellerName}) melalui jalur ukhuwah WhatsApp.`);
+                  showToast({
+                    type: "success",
+                    badge: "PESANAN UKHUWAH",
+                    title: "Pesanan Diteruskan ke Penjual",
+                    message: `Pemesanan "${selectedProduct.name}" diteruskan ke ${selectedProduct.sellerName}.`,
+                  });
                   setSelectedProduct(null);
                 }}
                 className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-lg text-xs flex items-center gap-1.5 shadow-sm"
